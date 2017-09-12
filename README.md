@@ -1,7 +1,8 @@
-# active-directory-subvert-mandatory-password-change
+# active-directory-subvert-periodic-password-change
 
+Technically complies with antiquated mandatory periodic password change policies for active directory using Docker.
 Change the Active Directory password for a username using Docker 25 times in a row, and then back to original password.
-Because mandatory password reset policies are stupid, and scripting this from a mac is a pain.
+Because mandatory password reset policies are stupid, and scripting this from a Mac is otherwise a pain.
 
 ## Requirements
 
@@ -11,7 +12,7 @@ Because mandatory password reset policies are stupid, and scripting this from a 
 
 The container can be run using the following command:
 
-    docker run --interactive --rm --tty stevenacoffman/active-directory-subvert-mandatory-password-change USERNAME DOMAIN
+    docker run --interactive --rm --tty stevenacoffman/active-directory-subvert-periodic-password-change USERNAME DOMAIN
 
 This will cause the password for `USERNAME` to be changed in the `DOMAIN` Active
 Directory domain. Frequently, the internal domain is office.share.org, so you might try that.
