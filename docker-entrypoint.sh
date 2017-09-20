@@ -2,20 +2,20 @@
 set -e
 test ! -z "$DEBUG" && set -x
 
-dc_ip_address() {
-    _domain="$1"
-    dig A +short $(dig -t SRV _ldap._tcp.dc._msdcs."$_domain" +short | cut -d' ' -f4) | \
+dcDOMAIN_IP_ADDRESS() {
+    DOMAIN="$1"
+    dig A +short $(dig -t SRV _ldap._tcp.dc._msdcs."$DOMAIN" +short | cut -d' ' -f4) | \
         head -n 1
 }
 
 main() {
-    _username="$1"
-    [[ -z "$_username" ]] && echo "Username is required" && exit 100
+    USERNAME="$1"
+    [[ -z "${USERNAME}" ]] && echo "Username is required" && exit 100
 
-    _domain="$2"
-    [[ -z "$_domain" ]] && echo "Domain is required. Try office.share.org" && exit 100
+    DOMAIN="$2"
+    [[ -z "${DOMAIN}" ]] && echo "Domain is required. Try office.share.org" && exit 100
 
-    _ip_address=$(dc_ip_address "$_domain")
+    DOMAIN_IP_ADDRESS=$(dcDOMAIN_IP_ADDRESS "${DOMAIN}")
     echo "Please enter password"
     printf ">"
     read -s ORIGINAL_PASSWORD
@@ -40,15 +40,15 @@ main() {
 
         if [[ -z  $LAST_VARIABLE_VALUE  ]]; then
             echo "Changing password from ORIGINAL_PASSWORD to ${i} + ORIGINAL_PASSWORD + ${i}"
-           (echo "${ORIGINAL_PASSWORD}"; echo "${CURRENT_VARIABLE_VALUE}"; echo "${CURRENT_VARIABLE_VALUE}") | /usr/bin/smbpasswd -U scoffman -r "$_ip_address"
+           (echo "${ORIGINAL_PASSWORD}"; echo "${CURRENT_VARIABLE_VALUE}"; echo "${CURRENT_VARIABLE_VALUE}") | /usr/bin/smbpasswd -U "${USERNAME}" -r "${DOMAIN_IP_ADDRESS}"
         else
             echo "Changing password from last password to ${i} + ORIGINAL_PASSWORD + ${i}"
-           (echo "${LAST_VARIABLE_VALUE}"; echo "${CURRENT_VARIABLE_VALUE}"; echo "${CURRENT_VARIABLE_VALUE}") | /usr/bin/smbpasswd -U scoffman -r "$_ip_address"
+           (echo "${LAST_VARIABLE_VALUE}"; echo "${CURRENT_VARIABLE_VALUE}"; echo "${CURRENT_VARIABLE_VALUE}") | /usr/bin/smbpasswd -U "${USERNAME}" -r "${DOMAIN_IP_ADDRESS}"
         fi
 
     done
     echo "Setting it back to ORIGINAL_PASSWORD from ${i} + ORIGINAL_PASSWORD + ${i}"
-   (echo "${CURRENT_VARIABLE_VALUE}"; echo "${ORIGINAL_PASSWORD}"; echo "${ORIG_PASSWORD}") | /usr/bin/smbpasswd -U scoffman -r "$_ip_address"
+   (echo "${CURRENT_VARIABLE_VALUE}"; echo "${ORIGINAL_PASSWORD}"; echo "${ORIG_PASSWORD}") | /usr/bin/smbpasswd -U "${USERNAME}" -r "${DOMAIN_IP_ADDRESS}"
 
 }
 
