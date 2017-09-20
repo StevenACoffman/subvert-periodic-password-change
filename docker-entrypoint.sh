@@ -2,7 +2,7 @@
 set -e
 test ! -z "$DEBUG" && set -x
 
-dcDOMAIN_IP_ADDRESS() {
+dc_ip_address() {
     DOMAIN="$1"
     dig A +short $(dig -t SRV _ldap._tcp.dc._msdcs."$DOMAIN" +short | cut -d' ' -f4) | \
         head -n 1
@@ -15,7 +15,7 @@ main() {
     DOMAIN="$2"
     [[ -z "${DOMAIN}" ]] && echo "Domain is required. Try office.share.org" && exit 100
 
-    DOMAIN_IP_ADDRESS=$(dcDOMAIN_IP_ADDRESS "${DOMAIN}")
+    DOMAIN_IP_ADDRESS=$(dc_ip_address "${DOMAIN}")
     echo "Please enter password"
     printf ">"
     read -s ORIGINAL_PASSWORD
