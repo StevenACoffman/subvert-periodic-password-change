@@ -48,7 +48,7 @@ main() {
 
     done
     echo "Setting it back to ORIGINAL_PASSWORD from ${i} + ORIGINAL_PASSWORD + ${i}"
-   (echo "${CURRENT_VARIABLE_VALUE}"; echo "${ORIGINAL_PASSWORD}"; echo "${ORIG_PASSWORD}") | /usr/bin/smbpasswd -U "${USERNAME}" -r "${DOMAIN_IP_ADDRESS}"
+   (echo "${CURRENT_VARIABLE_VALUE}"; echo "${ORIGINAL_PASSWORD}"; echo "${ORIGINAL_PASSWORD}") | /usr/bin/smbpasswd -U "${USERNAME}" -r "${DOMAIN_IP_ADDRESS}"
 
 }
 
